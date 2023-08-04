@@ -1,17 +1,14 @@
-import dotenv from "dotenv";
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { nanoid } from "nanoid";
 
 // Basic Configuration
-dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 const shorturls = {};
-
-app.use(cors());
-
 app.use("/public", express.static(`${process.cwd()}/public`));
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -23,12 +20,12 @@ app.get("/", function(_req, res) {
 app.post("/api/shorturl", function(req, res) {
   const id = nanoid(4);
   const original_url = req.body.url;
-  
+
   const isValidUrl = (url) => {
     const urlRegex = /^(http)s?:\/\/[^\s/$.?#].[^\s]*$/i;
     return urlRegex.test(url);
   };
-  
+
   if (isValidUrl(original_url)) {
     new URL(original_url);
     shorturls[id] = original_url;
