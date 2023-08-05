@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from "express";
+import path from "path";
 import cors from "cors";
 import { nanoid } from "nanoid";
 
@@ -7,13 +8,14 @@ import { nanoid } from "nanoid";
 const app = express();
 const port = process.env.PORT || 3000;
 const shorturls = {};
-app.use("/public", express.static(`${process.cwd()}/public`));
+
+app.use(express.static("public"));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.get("/", function(_req, res) {
-  res.sendFile(process.cwd() + "/views/index.html");
+  res.sendFile("index.html", { root: path.join(__dirname, "../public") });
 });
 
 // Your first API endpoint
@@ -44,3 +46,5 @@ app.get("/api/shorturl/:id", (req, res) => {
 app.listen(port, function() {
   console.log(`Listening on port ${port}`);
 });
+
+export default app
